@@ -7,7 +7,8 @@ using namespace std;
 int main() 
 {
 
-    IntArray* arr = new IntArray(10);
+    IntArray* arr = new IntArray(5);
+
     IntArray& l = *arr;
 
     for (size_t i = 0; i < arr->getLength(); i++)
@@ -16,10 +17,11 @@ int main()
         cout << "i = " << arr->get(i) << ", ";
     }
 
+
     arr->Add(123);
 
 
-    
+    arr->insertAt(9, 6);
     cout << "\n";
 
     IntArray arr2(*arr);
