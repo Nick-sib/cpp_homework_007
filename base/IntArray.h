@@ -26,7 +26,7 @@ public:
     void reallocate(int newLength);
     // resize resizes the array.  Any existing elements will be kept.  This function operates slowly.
     void resize(int newLength);
-    void insertBefore(int value, int index);
+    void insertAt(int value, int index);
     void remove(int index);
 
     // A couple of additional functions just for convenience

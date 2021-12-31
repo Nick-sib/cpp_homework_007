@@ -1,18 +1,22 @@
 #include <iostream>
-#include <cassert> // for assert()
 #include "IntArray.h"
+#include "ArrayException.h"
 
 
 IntArray::IntArray(int length): _length(length)
 {
-    assert(length >= 0);
+    if (length < 0) 
+        throw ArrayWrongLengthException(_length);
+    
     if (length > 0)
     _data = new int[length]{};
 }
 
 IntArray::IntArray(IntArray& array): _length(array.getLength())
 {
-    assert(array.getLength() >= 0);
+    if (array.getLength() < 0) 
+        throw ArrayWrongLengthException(_length);
+    
     if (_length > 0)
     {
         _data = new int[_length];
@@ -41,8 +45,9 @@ int& IntArray::operator[](int index)
 }
 
 int& IntArray::get(int index)
-{
-    assert(index >= 0 && index < _length);
+{   
+    if (index < 0 || index >= _length)
+        throw ArrayRangeException(index, _length - 1);
     return _data[index];
 }
 
@@ -90,8 +95,8 @@ void IntArray::resize(int newLength)
     // If we are resizing to an empty array, do that and return
     if (newLength <= 0)
     {
-            erase();
-            return;
+        erase();
+        return;
     }
 
     // Now we can assume newLength is at least 1 element.  This algorithm
@@ -125,10 +130,14 @@ void IntArray::resize(int newLength)
     _length = newLength;
 }
 
-void IntArray::insertBefore(int value, int index)
+void IntArray::insertAt(int value, int index)
 {
     // Sanity check our index value
-    assert(index >= 0 && index <= _length);
+
+//    assert(index >= 0 && index <= _length);
+
+    if (index < 0 || index > _length)
+        throw ArrayRangeException(index, _length);
 
     // First create a new array one element larger than the old array
     int* data{ new int[_length+1] };
@@ -153,7 +162,9 @@ void IntArray::insertBefore(int value, int index)
 void IntArray::remove(int index)
 {
     // Sanity check our index value
-    assert(index >= 0 && index < _length);
+    //assert(index >= 0 && index < _length);
+    if (index < 0 || index >= _length)
+        throw ArrayRangeException(index, _length - 1);
 
     // If we're removing the last element in the array, we can just erase the array and return early
     if (_length == 1)
@@ -179,5 +190,5 @@ void IntArray::remove(int index)
     --_length;
 }
 
-void IntArray::insertAtBeginning(int value) { insertBefore(value, 0); }
-void IntArray::insertAtEnd(int value) { insertBefore(value, _length); }
+void IntArray::insertAtBeginning(int value) { insertAt(value, 0); }
+void IntArray::insertAtEnd(int value) { insertAt(value, _length); }
