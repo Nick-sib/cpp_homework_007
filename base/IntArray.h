@@ -17,6 +17,7 @@ public:
     ~IntArray();
 
     void erase();
+    void erase(int defaultValue);
     int& operator[](int index);
     int& get(int index);
     //if value is not finded find return -1

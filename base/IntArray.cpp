@@ -6,7 +6,7 @@
 IntArray::IntArray(int length): _length(length)
 {
     if (length < 0) 
-        throw ArrayWrongLengthException(_length);
+        throw ArrayLengthException(_length);
     
     if (length > 0)
     _data = new int[length]{};
@@ -15,7 +15,7 @@ IntArray::IntArray(int length): _length(length)
 IntArray::IntArray(IntArray& array): _length(array.getLength())
 {
     if (array.getLength() < 0) 
-        throw ArrayWrongLengthException(_length);
+        throw ArrayLengthException(_length);
     
     if (_length > 0)
     {
@@ -39,6 +39,13 @@ void IntArray::erase()
     _length = 0;
 }
 
+void IntArray::erase(int defaultValue)
+{
+    if (_length < 0 || !_data)
+        throw ArrayDataException();
+    fill_n(_data, _length, defaultValue);
+}
+
 int& IntArray::operator[](int index)
 {
     return get(index);
@@ -56,7 +63,7 @@ int IntArray::findFirst(int value)
     int result = -1;
     for (int i = 0; i < _length; i++)
      if (_data[i] == value) 
-         return result;
+         return i;
     
     return result;
 }
@@ -67,7 +74,7 @@ int IntArray::findLast(int value)
     int result = -1;
     for (int i = _length - 1; i > 0; i--)
      if (_data[i] == value) 
-         return result;
+         return i;
 
     return result;
 }
@@ -95,8 +102,8 @@ void IntArray::resize(int newLength)
     // If we are resizing to an empty array, do that and return
     if (newLength <= 0)
     {
-        erase();
-        return;
+        throw ArrayLengthException(newLength);
+        //return;
     }
 
     // Now we can assume newLength is at least 1 element.  This algorithm
@@ -134,8 +141,6 @@ void IntArray::insertAt(int value, int index)
 {
     // Sanity check our index value
 
-//    assert(index >= 0 && index <= _length);
-
     if (index < 0 || index > _length)
         throw ArrayRangeException(index, _length);
 
@@ -162,7 +167,6 @@ void IntArray::insertAt(int value, int index)
 void IntArray::remove(int index)
 {
     // Sanity check our index value
-    //assert(index >= 0 && index < _length);
     if (index < 0 || index >= _length)
         throw ArrayRangeException(index, _length - 1);
 
