@@ -10,12 +10,21 @@ public:
     virtual const char* what() const noexcept override {return "Somthig got wrong";}
 };
 
-class ArrayWrongLengthException: public BaseArrayExeption
+class ArrayDataException: public BaseArrayExeption
+{
+public:
+    const char* what() const noexcept override 
+    {
+        return "ARRAY DATA is not available\n";
+    }
+};
+
+class ArrayLengthException: public BaseArrayExeption
 {
 private:
     int _length;
 public:
-    ArrayWrongLengthException(int length): _length(length){};
+    ArrayLengthException(int length): _length(length){};
     const char* what() const noexcept override 
     {
         stringstream strs;
@@ -28,7 +37,6 @@ public:
         return result;
     }
 };
-
 
 class ArrayRangeException: public BaseArrayExeption
 {
